@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from time import sleep
 import tensorflow as tf
 import tensorboard as tb
+
 tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
 
 
@@ -85,5 +86,12 @@ for run in range(1, 4):
     embedding = t.rand(10, 10)
     meta = [str(i) for i in range(10)]
     writer.add_embedding(embedding, metadata=meta)
+
+    # pr_curve
+    labels = np.random.randint(2, size=100)  # binary label
+    predictions = np.random.rand(100)
+    writer = SummaryWriter()
+    writer.add_pr_curve("pr_curve", labels, predictions, 0)
+    writer.close()
 
     writer.close()
