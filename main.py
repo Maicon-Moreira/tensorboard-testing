@@ -134,6 +134,11 @@ for run in range(1, 4):
         "my_mesh", vertices=vertices_tensor, colors=colors_tensor, faces=faces_tensor
     )
 
-    # writer.add_scalar("maicon", 0.5, 0)
+    # hparams
+    writer.add_hparams(
+        {"lr": 0.1 * run, "bsize": run},
+        {"hparam/accuracy": 10 * run, "hparam/loss": 10 * run},
+    )
 
+    writer.flush()
     writer.close()
