@@ -6,6 +6,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from time import sleep
+import tensorflow as tf
+import tensorboard as tb
+tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
 
 
 # delete logs folder
@@ -77,5 +80,10 @@ for run in range(1, 4):
 
     # graph
     writer.add_graph(simple_model, (t.rand(1, 10),))
+
+    # embedding
+    embedding = t.rand(10, 10)
+    meta = [str(i) for i in range(10)]
+    writer.add_embedding(embedding, metadata=meta)
 
     writer.close()
