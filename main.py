@@ -1,4 +1,5 @@
 import torch as t
+import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 import shutil
 import os
@@ -10,6 +11,27 @@ from time import sleep
 # delete logs folder
 if os.path.exists("./logs"):
     shutil.rmtree("./logs")
+
+
+class SimpleModel(nn.Module):
+    def __init__(self):
+        super(SimpleModel, self).__init__()
+        self.layer1 = nn.Linear(10, 10)
+        self.dropout = nn.Dropout(0.5)
+        self.relu = nn.ReLU()
+        self.layer2 = nn.Linear(10, 5)
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.dropout(x)
+        x = self.relu(x)
+        x = self.layer2(x)
+        x = self.softmax(x)
+        return x
+
+
+simple_model = SimpleModel()
 
 
 for run in range(1, 4):
@@ -52,5 +74,8 @@ for run in range(1, 4):
     # text
     text = f"Hello world from run {run}"
     writer.add_text("test_text", text)
+
+    # graph
+    writer.add_graph(simple_model, (t.rand(1, 10),))
 
     writer.close()
