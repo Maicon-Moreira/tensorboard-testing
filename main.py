@@ -90,8 +90,50 @@ for run in range(1, 4):
     # pr_curve
     labels = np.random.randint(2, size=100)  # binary label
     predictions = np.random.rand(100)
-    writer = SummaryWriter()
     writer.add_pr_curve("pr_curve", labels, predictions, 0)
-    writer.close()
+
+    # custom scalars
+    layout = {
+        "Taiwan": {"twse": ["Multiline", ["twse/0050", "twse/2330"]]},
+        "USA": {
+            "dow": ["Margin", ["dow/aaa", "dow/bbb", "dow/ccc"]],
+            "nasdaq": ["Margin", ["nasdaq/aaa", "nasdaq/bbb", "nasdaq/ccc"]],
+        },
+    }
+    writer.add_custom_scalars(layout)
+
+    # mesh
+    vertices_tensor = t.as_tensor(
+        [
+            [1, 1, 1],
+            [-1, -1, 1],
+            [1, -1, -1],
+            [-1, 1, -1],
+        ],
+        dtype=t.float,
+    ).unsqueeze(0)
+    colors_tensor = t.as_tensor(
+        [
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [255, 0, 255],
+        ],
+        dtype=t.int,
+    ).unsqueeze(0)
+    faces_tensor = t.as_tensor(
+        [
+            [0, 2, 3],
+            [0, 3, 1],
+            [0, 1, 2],
+            [1, 3, 2],
+        ],
+        dtype=t.int,
+    ).unsqueeze(0)
+    writer.add_mesh(
+        "my_mesh", vertices=vertices_tensor, colors=colors_tensor, faces=faces_tensor
+    )
+
+    # writer.add_scalar("maicon", 0.5, 0)
 
     writer.close()
